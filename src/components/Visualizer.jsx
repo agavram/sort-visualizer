@@ -33,8 +33,8 @@ class Visualizer extends Component {
                     <Nav className="mr-auto">
                         <Nav.Link onClick={() => this.insertionSort()}>Insertion</Nav.Link>
                         <Nav.Link onClick={() => this.selectionSort()}>Selection</Nav.Link>
-                        <Nav.Link>Bubble</Nav.Link>
-                        <Nav.Link>Shell</Nav.Link>
+                        <Nav.Link onClick={() => this.bubbleSort()}>Bubble</Nav.Link>
+                        <Nav.Link onClick={() => this.shellSort()}>Shell</Nav.Link>
                         <Nav.Link>Merge</Nav.Link>
                         <Nav.Link>Heap</Nav.Link>
                         <Nav.Link>Quick</Nav.Link>
@@ -80,29 +80,22 @@ class Visualizer extends Component {
 
         let nums = [];
         this.state.array.forEach(element => nums.push(parseInt(element.props.value)));
-        console.log(nums)
+        let animationCounter = 0;
 
         for (let i = 1; i < nums.length; i++) {
             let j = i - 1;
             let temp = nums[i];
-            setTimeout(() => {
-                document.getElementById(i).style.backgroundColor = 'red';
-                if (i - 1 >= 0) {
-                    document.getElementById(i - 1).style.backgroundColor = 'rgb(40, 40, 40)';
-                }
-                while (j >= 0 && nums[j] > temp) {
-                    const tempLeft = document.getElementById(j + 1).style.left
-                    document.getElementById(j + 1).style.left = document.getElementById(j).style.left;
-                    document.getElementById(j).style.left = tempLeft;
+            while (j >= 0 && nums[j] > temp) {
+                const swapNum = j + 1;
+                setTimeout(() => {
+                    this.swapDivPositions(swapNum, swapNum - 1)
+                }, animationCounter * ANIMATION_SPEED);
+                animationCounter++;
 
-                    nums[j + 1] = nums[j];
-                    j--;
-                }
-                const tempLeft = document.getElementById(j + 1).style.left;
-                document.getElementById(j + 1).style.left = document.getElementById(i).style.left;
-                document.getElementById(i).style.left = tempLeft;
-                nums[j + 1] = temp;
-            }, i * ANIMATION_SPEED);
+                nums[j + 1] = nums[j];
+                j--;
+            }
+            nums[j + 1] = temp;
         }
 
         this.setState({ sorted: true })
@@ -152,13 +145,7 @@ class Visualizer extends Component {
             if (min !== i) {
                 animationCounter++;
                 setTimeout(() => {
-                    const tempLeft = document.getElementById(i).style.left
-                    document.getElementById(i).style.left = document.getElementById(min).style.left;
-                    document.getElementById(min).style.left = tempLeft;
-
-                    document.getElementById(i).id = -1;
-                    document.getElementById(min).id = i;
-                    document.getElementById(-1).id = min;
+                    this.swapDivPositions(i, min)
                 }, ANIMATION_SPEED * animationCounter);
 
                 let tmp = nums[i];
@@ -168,6 +155,79 @@ class Visualizer extends Component {
         }
 
         this.setState({ sorted: true })
+    }
+
+    bubbleSort() {
+        if (this.state.sorted) {
+            return;
+        }
+
+        let nums = [];
+        this.state.array.forEach(element => nums.push(parseInt(element.props.value)));
+        let animationCounter = 0;
+
+        let len = nums.length;
+        for (let i = 0; i < len; i++) {
+            for (let j = 0; j < len; j++) {
+                if (nums[j] > nums[j + 1]) {
+                    setTimeout(() => {
+                        this.swapDivPositions(j, j + 1);
+                    }, ANIMATION_SPEED * animationCounter);
+                    animationCounter++;
+                    let tmp = nums[j];
+                    nums[j] = nums[j + 1];
+                    nums[j + 1] = tmp;
+                }
+            }
+        }
+
+    }
+
+    shellSort() {
+        if (this.state.sorted) {
+            return;
+        }
+
+        let nums = [];
+        this.state.array.forEach(element => nums.push(parseInt(element.props.value)));
+        let animationCounter = 0;
+
+        var increment = nums.length / 2;
+        while (increment > 0) {
+            for (let i = increment; i < nums.length; i++) {
+                var j = i;
+                var temp = nums[i];
+
+                while (j >= increment && nums[j - increment] > temp) {
+                    const swapNum1 = j;
+                    const swapNum2 = j - increment;
+                    setTimeout(() => {
+                        this.swapDivPositions(swapNum1, swapNum2)
+                    }, ANIMATION_SPEED * animationCounter);
+                    animationCounter++;
+                    nums[j] = nums[j - increment];
+                    j = j - increment;
+                }
+
+                nums[j] = temp;
+            }
+
+            if (increment === 2) {
+                increment = 1;
+            } else {
+                increment = parseInt(increment * 5 / 11);
+            }
+        }
+    }
+
+    swapDivPositions(id1, id2) {
+        const tempLeft = document.getElementById(id1).style.left
+        document.getElementById(id1).style.left = document.getElementById(id2).style.left;
+        document.getElementById(id2).style.left = tempLeft;
+
+        document.getElementById(id1).id = -1;
+        document.getElementById(id2).id = id1;
+        document.getElementById(-1).id = id2;
     }
 }
 
