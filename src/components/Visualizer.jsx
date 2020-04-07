@@ -56,8 +56,9 @@ class Visualizer extends Component {
 
         for (let i = 0; i < size; i++) {
             const height = Math.floor(Math.random() * 88) + 10
+            console.log("ID: " + i + ", Value: " + height)
             newArray.push(
-                <div key={i} id={i} className="bar" value={height} style={{
+                <div key={i} id={i} location={i} className="bar" value={height} style={{
                     width: `calc(${100 / size}% - ${subtractWidth}px)`,
                     height: `calc(${height}% - ${this.nav.clientHeight}px`,
                     bottom: `10px`,
@@ -229,6 +230,7 @@ class Visualizer extends Component {
         let nums = new Array(this.state.array.length).fill(0);
         const bars = document.getElementsByClassName('bar');
         for (let i = 0; i < nums.length; i++) {
+            bars[i].id = bars[i].getAttribute('location')
             nums[bars[i].id] = parseInt(bars[i].getAttribute('value'));
         }
         console.log(nums);
