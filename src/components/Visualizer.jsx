@@ -104,10 +104,10 @@ class Visualizer extends Component {
             return;
         }
 
-        let nums = getArray()
+        let nums = this.getArray()
         let len = nums.length;
         let animationCounter = 0;
-        
+
         for (let i = 0; i < len; i++) {
             let min = i;
 
@@ -158,7 +158,7 @@ class Visualizer extends Component {
             return;
         }
 
-        let nums = getArray();
+        let nums = this.getArray();
         let animationCounter = 0;
 
         let len = nums.length;
@@ -183,7 +183,7 @@ class Visualizer extends Component {
             return;
         }
 
-        let nums = getArray();
+        let nums = this.getArray();
         let animationCounter = 0;
 
         var increment = nums.length / 2;
