@@ -69,8 +69,6 @@ class Visualizer extends Component {
         }
 
         this.setState({ array: newArray, sorted: false })
-
-        return false;
     }
 
     insertionSort() {
@@ -78,8 +76,7 @@ class Visualizer extends Component {
             return;
         }
 
-        let nums = [];
-        this.state.array.forEach(element => nums.push(parseInt(element.props.value)));
+        let nums = this.getArray();
         let animationCounter = 0;
 
         for (let i = 1; i < nums.length; i++) {
@@ -107,11 +104,10 @@ class Visualizer extends Component {
             return;
         }
 
-        let nums = [];
-        this.state.array.forEach(element => nums.push(parseInt(element.props.value)));
-
+        let nums = getArray()
         let len = nums.length;
         let animationCounter = 0;
+        
         for (let i = 0; i < len; i++) {
             let min = i;
 
@@ -162,8 +158,7 @@ class Visualizer extends Component {
             return;
         }
 
-        let nums = [];
-        this.state.array.forEach(element => nums.push(parseInt(element.props.value)));
+        let nums = getArray();
         let animationCounter = 0;
 
         let len = nums.length;
@@ -180,7 +175,7 @@ class Visualizer extends Component {
                 }
             }
         }
-
+        this.setState({ sorted: true })
     }
 
     shellSort() {
@@ -188,8 +183,7 @@ class Visualizer extends Component {
             return;
         }
 
-        let nums = [];
-        this.state.array.forEach(element => nums.push(parseInt(element.props.value)));
+        let nums = getArray();
         let animationCounter = 0;
 
         var increment = nums.length / 2;
@@ -218,6 +212,7 @@ class Visualizer extends Component {
                 increment = parseInt(increment * 5 / 11);
             }
         }
+        this.setState({ sorted: true })
     }
 
     swapDivPositions(id1, id2) {
@@ -228,6 +223,16 @@ class Visualizer extends Component {
         document.getElementById(id1).id = -1;
         document.getElementById(id2).id = id1;
         document.getElementById(-1).id = id2;
+    }
+
+    getArray() {
+        let nums = new Array(this.state.array.length).fill(0);
+        const bars = document.getElementsByClassName('bar');
+        for (let i = 0; i < nums.length; i++) {
+            nums[bars[i].id] = parseInt(bars[i].getAttribute('value'));
+        }
+        console.log(nums);
+        return nums;
     }
 }
 
