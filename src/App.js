@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Array from './components/Visualizer'
+import Array from './pages/Visualizer'
 
 function App() {
   return (
