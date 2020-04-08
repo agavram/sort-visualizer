@@ -6,6 +6,7 @@ import { selectionSort } from '../sorting/Selection';
 import { bubbleSort } from '../sorting/Bubble';
 import { shellSort } from '../sorting/Shell';
 import { quickSort } from '../sorting/Quick';
+import { heapSort } from '../sorting/Heap';
 
 
 // The animation speed in milliseconds which can be modified
@@ -48,7 +49,7 @@ class Visualizer extends Component {
                         <Nav.Link onClick={() => this.sort(bubbleSort)}>Bubble</Nav.Link>
                         <Nav.Link onClick={() => this.sort(shellSort)}>Shell</Nav.Link>
                         {/* <Nav.Link onClick={() => this.sort(mergeSort) }>Merge</Nav.Link> */}
-                        {/* <Nav.Link onClick={() => this.sort(heapSort) }>Heap</Nav.Link> */}
+                        <Nav.Link onClick={() => this.sort(heapSort) }>Heap</Nav.Link>
                         <Nav.Link onClick={() => this.sort(quickSort)}>Quick</Nav.Link>
                     </Nav>
                     <Form inline onSubmit={e => { e.preventDefault(); this.generateArray() }}>
@@ -65,6 +66,9 @@ class Visualizer extends Component {
      * Generates a random array based off the newSize
      */
     generateArray() {
+        let nums = [1, 2, 3, 2, 1, 10 , 6 , 3, -1, 5, 7]
+        heapSort(nums)
+        console.log(nums)
         // The inputted size
         const size = parseInt(this.state.newSize);
         const newArray = []
@@ -112,7 +116,7 @@ class Visualizer extends Component {
         let animationCounter = 0;
 
         for (let i = 0; i < animationArray.length; i++) {
-            if (animationArray[i][0] != animationArray[i][1]) {
+            if (animationArray[i][0] !== animationArray[i][1]) {
                 setTimeout(() => {
                     swapDivPositions(animationArray[i][0], animationArray[i][1])
                 }, ANIMATION_SPEED * animationCounter);
