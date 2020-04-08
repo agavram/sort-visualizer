@@ -66,9 +66,6 @@ class Visualizer extends Component {
      * Generates a random array based off the newSize
      */
     generateArray() {
-        let nums = [1, 2, 3, 2, 1, 10 , 6 , 3, -1, 5, 7]
-        heapSort(nums)
-        console.log(nums)
         // The inputted size
         const size = parseInt(this.state.newSize);
         const newArray = []
