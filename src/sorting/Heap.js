@@ -33,7 +33,7 @@ function heap_root(nums, i, length, animationArray) {
         max = right;
     }
 
-    if (max != i) {
+    if (max !== i) {
         animationArray.push([i, max]);
         swap(nums, i, max);
         heap_root(nums, max, length, animationArray);

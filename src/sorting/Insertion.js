@@ -1,6 +1,5 @@
 export function insertionSort(nums) {
     let animationArray = [];
-    console.log(nums)
 
     for (let i = 1; i < nums.length; i++) {
         let j = i - 1;

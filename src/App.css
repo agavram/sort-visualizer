@@ -5,9 +5,7 @@
   font-size: 20px;
   float: left;
   margin-right: 10px;
-  position: relative;
-  transition-property: width height background-color left;
-  transition-duration: 0.5s;
+  transition: 0.5s;
 }
 
 .value {
