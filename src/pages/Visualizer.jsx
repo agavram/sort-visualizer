@@ -71,12 +71,12 @@ class Visualizer extends Component {
                     </Form>
                 </Navbar>
                 {mapIterator(bars, (value, key) => {
-                    return <div key={value[1]} id={value[1]} className="bar" style={{
+                    return <div key={key} id={key} className="bar" style={{
                         width: `calc(${100 / (bars.size)}% - ${subtractWidth}px)`,
                         height: `calc(${value[0]}% - ${this.state.navHeight}px`,
                         bottom: `10px`,
                         position: 'absolute',
-                        left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${key} + ${key + 1} * 10px)`,
+                        left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${value[1]} + ${value[1] + 1} * 10px)`,
                     }} >
                         {/* Text inside the bar showing the height for the user to see */}
                         <span className="value">{value[0]}</span>
@@ -143,11 +143,26 @@ class Visualizer extends Component {
      */
     swapDivPositions(id1, id2) {
         const barMap = this.state.barMap;
+        let id1Value;
+        let index1;
+        let id2Value;
+        let index2;
+        barMap.forEach((value, key) => {
+            if (value[1] === id1) {
+                id1Value = value;
+                index1 = key;
+            } else if (value[1] === id2) {
+                id2Value = value;
+                index2 = key;
+            }
+        })
 
-        const id1Value = barMap.get(id1);
-        const id2Value = barMap.get(id2);
-        barMap.set(id1, id2Value);
-        barMap.set(id2, id1Value);
+        const temp = id1Value[1];
+        id1Value[1] = id2Value[1];
+        id2Value[1] = temp;
+
+        barMap.set(index1, id1Value);
+        barMap.set(index2, id2Value);
 
         this.setState({ barMap })
     }
