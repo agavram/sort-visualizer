@@ -5,7 +5,10 @@
   font-size: 20px;
   float: left;
   margin-right: 10px;
-  transition: 0.5s;
+}
+
+.custom-range {
+  width: 200px !important;
 }
 
 .value {

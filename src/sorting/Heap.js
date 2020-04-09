@@ -1,4 +1,4 @@
-import { swap } from '../utilities/Helpers';
+import { swap } from '../utilities/Utilities';
 
 export function heapSort(nums) {
 

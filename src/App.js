@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Array from './pages/Visualizer'
+import Visualizer from './pages/Visualizer'
 
 function App() {
   return (
     <div className="App">
-      <Array></Array>
+      <Visualizer></Visualizer>
       <link
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"

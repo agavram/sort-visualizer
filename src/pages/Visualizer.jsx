@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
+import { Nav, Navbar, Form, FormControl, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { insertionSort } from '../sorting/Insertion';
 import { selectionSort } from '../sorting/Selection';
 import { bubbleSort } from '../sorting/Bubble';
 import { shellSort } from '../sorting/Shell';
 import { quickSort } from '../sorting/Quick';
 import { heapSort } from '../sorting/Heap';
+import { cocktail } from '../sorting/Cocktail';
 
 
 // The animation speed in milliseconds which can be modified
 // Must also be changed in the CSS file.
 // In the future this will be configurable by the user
-const ANIMATION_SPEED = 500;
+const ANIMATION_SPEED = 350;
 
 class Visualizer extends Component {
 
@@ -23,6 +24,7 @@ class Visualizer extends Component {
             newSize: 15,
             barMap: new Map(),
             sorted: false,
+            sorting: false,
             navHeight: 0,
         };
 
@@ -61,13 +63,17 @@ class Visualizer extends Component {
                         <Nav.Link onClick={() => this.sort(selectionSort)}>Selection</Nav.Link>
                         <Nav.Link onClick={() => this.sort(bubbleSort)}>Bubble</Nav.Link>
                         <Nav.Link onClick={() => this.sort(shellSort)}>Shell</Nav.Link>
+                        <Nav.Link onClick={() => this.sort(cocktail)}>Cocktail</Nav.Link>
                         {/* <Nav.Link onClick={() => this.sort(mergeSort) }>Merge</Nav.Link> */}
                         <Nav.Link onClick={() => this.sort(heapSort)}>Heap</Nav.Link>
                         <Nav.Link onClick={() => this.sort(quickSort)}>Quick</Nav.Link>
                     </Nav>
                     <Form inline onSubmit={e => { e.preventDefault(); this.generateArray(); }}>
+                        <OverlayTrigger placement="bottom" overlay={<Tooltip>Animation Speed: 350ms</Tooltip>}>
+                            <input data-toggle="tooltip" title="Animation Speed" data-placement="bottom" type="range" className="custom-range mr-2" min="200" max="1000" step="5" />
+                        </OverlayTrigger>
                         <FormControl type="number" placeholder="Size of list" className="mr-sm-2" onChange={this.sizeChange} max="35" min="5" style={{ width: '125px' }} />
-                        <Button variant="outline-info" onClick={() => this.generateArray(this.state.newSize)}>Randomize</Button>
+                        <Button variant="outline-info" type="submit">Randomize</Button>
                     </Form>
                 </Navbar>
                 {mapIterator(bars, (value, key) => {
@@ -77,6 +83,7 @@ class Visualizer extends Component {
                         bottom: `10px`,
                         position: 'absolute',
                         left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${value[1]} + ${value[1] + 1} * 10px)`,
+                        transition: '0.35s'
                     }} >
                         {/* Text inside the bar showing the height for the user to see */}
                         <span className="value">{value[0]}</span>
@@ -90,8 +97,12 @@ class Visualizer extends Component {
      * Generates a random divArray based off the newSize
      */
     generateArray() {
+        if (this.state.sorting) {
+            return;
+        }
+
         // The inputted size
-        const size = parseInt(this.state.newSize);
+        let size = parseInt(this.state.newSize);
         // This takes into account the margin of 10px
         const barMap = new Map();
 
@@ -106,13 +117,17 @@ class Visualizer extends Component {
 
     sort(algorithm) {
         let nums = this.getArray();
-        if (this.state.sorted) {
+        if (this.state.sorted || this.state.sorting) {
             return;
         }
-        this.setState({ sorted: true });
+        this.setState({ sorted: true, sorting: true });
 
         let animationArray = algorithm(nums);
         let animationCounter = 0;
+
+        setTimeout(() => {
+            this.setState({ sorting: false });
+        }, animationArray.length * ANIMATION_SPEED);
 
         for (let i = 0; i < animationArray.length; i++) {
             if (animationArray[i][0] !== animationArray[i][1]) {
@@ -130,8 +145,8 @@ class Visualizer extends Component {
         const bars = this.state.barMap;
 
         bars.forEach((value, _) => {
-            nums.push(value[0])
-        })
+            nums.push(value[0]);
+        });
 
         return nums;
     }
@@ -155,7 +170,7 @@ class Visualizer extends Component {
                 id2Value = value;
                 index2 = key;
             }
-        })
+        });
 
         const temp = id1Value[1];
         id1Value[1] = id2Value[1];
@@ -164,7 +179,7 @@ class Visualizer extends Component {
         barMap.set(index1, id1Value);
         barMap.set(index2, id2Value);
 
-        this.setState({ barMap })
+        this.setState({ barMap });
     }
 }
 
