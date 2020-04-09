@@ -24,6 +24,7 @@ class Visualizer extends Component {
             sorted: false,
             sorting: false,
             animationSpeed: 350,
+            hideText: false
         };
 
         // Used to track when the user enters a different size
@@ -44,7 +45,13 @@ class Visualizer extends Component {
     }
 
     componentDidMount() {
+        window.addEventListener("resize", this.resize.bind(this));
+        this.resize();
         this.generateArray(15);
+    }
+
+    resize() {
+        this.setState({ hideText: window.innerWidth <= 900});
     }
 
     render() {
@@ -61,7 +68,7 @@ class Visualizer extends Component {
 
         return (
             <React.Fragment>
-                <Navbar expand="lg" bg="dark" variant="dark" ref={(nav) => { this.nav = nav; }}>
+                <Navbar expand="xl" bg="dark" variant="dark">
                     <Navbar.Brand>Sort Visualizer</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
@@ -84,22 +91,24 @@ class Visualizer extends Component {
                         </Form>
                     </Navbar.Collapse>
                 </Navbar>
-                {mapIterator(bars, (value, key) => {
+                {
+                mapIterator(bars, (value, key) => {
                     return <div key={key} id={key} className="bar" style={{
                         width: `calc(${100 / (bars.size)}% - ${subtractWidth}px)`,
                         // height: `calc(${value[0]}% - ${this.nav.clientHeight}px`,
-                        height: `calc(${value[0]}vh - ${this.nav.clientHeight}px)`,
+                        height: `calc(${value[0]}vh - 56px)`,
                         bottom: `10px`,
                         position: 'absolute',
                         left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${value[1]} + ${value[1] + 1} * 10px)`,
                         transition: `${this.state.animationSpeed / 1000}s`
                     }} >
                         {/* Text inside the bar showing the height for the user to see */}
-                        <span className="value">{value[0]}</span>
+                        <span hidden={this.state.hideText} className="value">{value[0]}</span>
                     </div>;
                 })}
             </React.Fragment>
         );
+
     }
 
     /**
