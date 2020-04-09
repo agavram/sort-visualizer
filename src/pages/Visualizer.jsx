@@ -9,10 +9,8 @@ import { heapSort } from '../sorting/Heap';
 import { cocktail } from '../sorting/Cocktail';
 
 
-// The animation speed in milliseconds which can be modified
-// Must also be changed in the CSS file.
-// In the future this will be configurable by the user
-const ANIMATION_SPEED = 350;
+// The animation speed in milliseconds which can be modified via a slider
+let ANIMATION_SPEED = 350;
 
 class Visualizer extends Component {
 
@@ -25,10 +23,11 @@ class Visualizer extends Component {
             barMap: new Map(),
             sorted: false,
             sorting: false,
-            navHeight: 0,
+            animationSpeed: 350,
         };
 
         // Used to track when the user enters a different size
+        this.animationSpeedChange = this.animationSpeedChange.bind(this);
         this.sizeChange = this.sizeChange.bind(this);
     }
 
@@ -36,9 +35,15 @@ class Visualizer extends Component {
         this.setState({ newSize: event.target.value });
     }
 
+    animationSpeedChange(event) {
+        this.setState({ animationSpeed: parseInt(event.target.value) });
+
+        if (!this.state.sorting) {
+            ANIMATION_SPEED = event.target.value;
+        }
+    }
+
     componentDidMount() {
-        const height = this.nav.clientHeight;
-        this.setState({ navHeight: height });
         this.generateArray(15);
     }
 
@@ -56,34 +61,38 @@ class Visualizer extends Component {
 
         return (
             <React.Fragment>
-                <Navbar bg="dark" variant="dark" ref={(nav) => { this.nav = nav; }}>
+                <Navbar expand="lg" bg="dark" variant="dark" ref={(nav) => { this.nav = nav; }}>
                     <Navbar.Brand>Sort Visualizer</Navbar.Brand>
-                    <Nav className="mr-auto">
-                        <Nav.Link onClick={() => this.sort(insertionSort)}>Insertion</Nav.Link>
-                        <Nav.Link onClick={() => this.sort(selectionSort)}>Selection</Nav.Link>
-                        <Nav.Link onClick={() => this.sort(bubbleSort)}>Bubble</Nav.Link>
-                        <Nav.Link onClick={() => this.sort(shellSort)}>Shell</Nav.Link>
-                        <Nav.Link onClick={() => this.sort(cocktail)}>Cocktail</Nav.Link>
-                        {/* <Nav.Link onClick={() => this.sort(mergeSort) }>Merge</Nav.Link> */}
-                        <Nav.Link onClick={() => this.sort(heapSort)}>Heap</Nav.Link>
-                        <Nav.Link onClick={() => this.sort(quickSort)}>Quick</Nav.Link>
-                    </Nav>
-                    <Form inline onSubmit={e => { e.preventDefault(); this.generateArray(); }}>
-                        <OverlayTrigger placement="bottom" overlay={<Tooltip>Animation Speed: 350ms</Tooltip>}>
-                            <input data-toggle="tooltip" title="Animation Speed" data-placement="bottom" type="range" className="custom-range mr-2" min="200" max="1000" step="5" />
-                        </OverlayTrigger>
-                        <FormControl type="number" placeholder="Size of list" className="mr-sm-2" onChange={this.sizeChange} max="35" min="5" style={{ width: '125px' }} />
-                        <Button variant="outline-info" type="submit">Randomize</Button>
-                    </Form>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                    <Navbar.Collapse id="responsive-navbar-nav">
+                        <Nav className="mr-auto">
+                            <Nav.Link onClick={() => this.sort(insertionSort)}>Insertion</Nav.Link>
+                            <Nav.Link onClick={() => this.sort(selectionSort)}>Selection</Nav.Link>
+                            <Nav.Link onClick={() => this.sort(bubbleSort)}>Bubble</Nav.Link>
+                            <Nav.Link onClick={() => this.sort(shellSort)}>Shell</Nav.Link>
+                            <Nav.Link onClick={() => this.sort(cocktail)}>Cocktail</Nav.Link>
+                            {/* <Nav.Link onClick={() => this.sort(mergeSort) }>Merge</Nav.Link> */}
+                            <Nav.Link onClick={() => this.sort(heapSort)}>Heap</Nav.Link>
+                            <Nav.Link onClick={() => this.sort(quickSort)}>Quick</Nav.Link>
+                        </Nav>
+                        <Form inline onSubmit={e => { e.preventDefault(); this.generateArray(); }}>
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip>Animation Speed: {this.state.animationSpeed}ms</Tooltip>}>
+                                <input value={this.state.animationSpeed} onChange={this.animationSpeedChange} data-toggle="tooltip" title="Animation Speed" data-placement="bottom" type="range" className="custom-range mr-2" min="200" max="1000" step="5" />
+                            </OverlayTrigger>
+                            <FormControl type="number" placeholder="Size of list" className="mr-sm-2" onChange={this.sizeChange} max="35" min="5" style={{ width: '125px' }} />
+                            <Button variant="outline-info" type="submit">Randomize</Button>
+                        </Form>
+                    </Navbar.Collapse>
                 </Navbar>
                 {mapIterator(bars, (value, key) => {
                     return <div key={key} id={key} className="bar" style={{
                         width: `calc(${100 / (bars.size)}% - ${subtractWidth}px)`,
-                        height: `calc(${value[0]}% - ${this.state.navHeight}px`,
+                        // height: `calc(${value[0]}% - ${this.nav.clientHeight}px`,
+                        height: `calc(${value[0]}vh - ${this.nav.clientHeight}px)`,
                         bottom: `10px`,
                         position: 'absolute',
                         left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${value[1]} + ${value[1] + 1} * 10px)`,
-                        transition: '0.35s'
+                        transition: `${this.state.animationSpeed / 1000}s`
                     }} >
                         {/* Text inside the bar showing the height for the user to see */}
                         <span className="value">{value[0]}</span>

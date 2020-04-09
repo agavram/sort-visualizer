@@ -1,3 +1,7 @@
+nav {
+  z-index: 100;
+}
+
 .bar {
   background-color: rgb(40, 40, 40);
   color: white;
@@ -5,6 +9,7 @@
   font-size: 20px;
   float: left;
   margin-right: 10px;
+  font-size: 1.25vw;
 }
 
 .custom-range {
@@ -14,6 +19,6 @@
 .value {
   position: absolute;
   width: 100%;
-  bottom: 5px;
+  bottom: 2.5px;
   left: 0;
 }
