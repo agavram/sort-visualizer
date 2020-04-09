@@ -2,6 +2,32 @@ nav {
   z-index: 100;
 }
 
+.sort-selection {
+  position: relative;
+}
+
+.sort-selection:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #FFF;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: 0.125s all ease-in-out;
+}
+
+.sort-selection:hover:before {
+  visibility: visible;
+  transform: scaleX(1);
+}
+
+.sort-selection:hover {
+  color: white !important;
+}
+
 .bar {
   background-color: rgb(40, 40, 40);
   color: white;

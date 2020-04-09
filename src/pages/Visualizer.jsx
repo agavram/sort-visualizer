@@ -73,14 +73,14 @@ class Visualizer extends Component {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">
-                            <Nav.Link onClick={() => this.sort(insertionSort)}>Insertion</Nav.Link>
-                            <Nav.Link onClick={() => this.sort(selectionSort)}>Selection</Nav.Link>
-                            <Nav.Link onClick={() => this.sort(bubbleSort)}>Bubble</Nav.Link>
-                            <Nav.Link onClick={() => this.sort(shellSort)}>Shell</Nav.Link>
-                            <Nav.Link onClick={() => this.sort(cocktail)}>Cocktail</Nav.Link>
+                            <Nav.Link onClick={() => this.sort(insertionSort)}><span className="sort-selection">Insertion</span></Nav.Link>
+                            <Nav.Link onClick={() => this.sort(selectionSort)}><span className="sort-selection">Selection</span></Nav.Link>
+                            <Nav.Link onClick={() => this.sort(bubbleSort)}><span className="sort-selection">Bubble</span></Nav.Link>
+                            <Nav.Link onClick={() => this.sort(shellSort)}><span className="sort-selection">Shell</span></Nav.Link>
+                            <Nav.Link onClick={() => this.sort(cocktail)}><span className="sort-selection">Cocktail</span></Nav.Link>
                             {/* <Nav.Link onClick={() => this.sort(mergeSort) }>Merge</Nav.Link> */}
-                            <Nav.Link onClick={() => this.sort(heapSort)}>Heap</Nav.Link>
-                            <Nav.Link onClick={() => this.sort(quickSort)}>Quick</Nav.Link>
+                            <Nav.Link onClick={() => this.sort(heapSort)}><span className="sort-selection">Heap</span></Nav.Link>
+                            <Nav.Link onClick={() => this.sort(quickSort)}><span className="sort-selection">Quick</span></Nav.Link>
                         </Nav>
                         <Form inline onSubmit={e => { e.preventDefault(); this.generateArray(); }}>
                             <OverlayTrigger placement="bottom" overlay={<Tooltip>Animation Speed: {this.state.animationSpeed}ms</Tooltip>}>
@@ -143,10 +143,6 @@ class Visualizer extends Component {
         let animationArray = algorithm(nums);
         let animationCounter = 0;
 
-        setTimeout(() => {
-            this.setState({ sorting: false });
-        }, animationArray.length * ANIMATION_SPEED);
-
         for (let i = 0; i < animationArray.length; i++) {
             if (animationArray[i][0] !== animationArray[i][1]) {
                 setTimeout(() => {
@@ -155,6 +151,10 @@ class Visualizer extends Component {
                 animationCounter++;
             }
         }
+
+        setTimeout(() => {
+            this.setState({ sorting: false });
+        }, animationCounter * ANIMATION_SPEED);
     }
 
     getArray() {
