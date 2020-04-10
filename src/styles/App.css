@@ -36,6 +36,8 @@ nav {
   float: left;
   margin-right: 10px;
   font-size: 1.25vw;
+  position: absolute;
+  bottom: 0px;
 }
 
 .custom-range {

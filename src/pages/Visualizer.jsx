@@ -8,10 +8,6 @@ import { quickSort } from '../sorting/Quick';
 import { heapSort } from '../sorting/Heap';
 import { cocktail } from '../sorting/Cocktail';
 
-
-// The animation speed in milliseconds which can be modified via a slider
-let ANIMATION_SPEED = 350;
-
 class Visualizer extends Component {
 
     constructor(props) {
@@ -38,10 +34,6 @@ class Visualizer extends Component {
 
     animationSpeedChange(event) {
         this.setState({ animationSpeed: parseInt(event.target.value) });
-
-        if (!this.state.sorting) {
-            ANIMATION_SPEED = event.target.value;
-        }
     }
 
     componentDidMount() {
@@ -97,8 +89,6 @@ class Visualizer extends Component {
                         width: `calc(${100 / (bars.size)}% - ${subtractWidth}px)`,
                         // height: `calc(${value[0]}% - ${this.nav.clientHeight}px`,
                         height: `calc(${value[0]}vh - 56px)`,
-                        bottom: `10px`,
-                        position: 'absolute',
                         left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${value[1]} + ${value[1] + 1} * 10px)`,
                         transition: `${this.state.animationSpeed / 1000}s`
                     }} >
@@ -140,21 +130,20 @@ class Visualizer extends Component {
         }
         this.setState({ sorted: true, sorting: true });
 
-        let animationArray = algorithm(nums);
-        let animationCounter = 0;
+        this.animate(algorithm(nums));
+    }
 
-        for (let i = 0; i < animationArray.length; i++) {
-            if (animationArray[i][0] !== animationArray[i][1]) {
-                setTimeout(() => {
-                    this.swapDivPositions(animationArray[i][0], animationArray[i][1]);
-                }, ANIMATION_SPEED * animationCounter);
-                animationCounter++;
-            }
+    animate(animationArray) {
+        // const delay = this.state.animationSpeed
+        if (animationArray.length == 0) {
+            this.setState({ sorting: false })
+        } else {
+            setTimeout(() => {
+                this.swapDivPositions(animationArray[0][0], animationArray[0][1]);
+                animationArray.shift();
+                this.animate(animationArray);
+            }, this.state.animationSpeed);
         }
-
-        setTimeout(() => {
-            this.setState({ sorting: false });
-        }, animationCounter * ANIMATION_SPEED);
     }
 
     getArray() {
