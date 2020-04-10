@@ -20,7 +20,8 @@ class Visualizer extends Component {
             sorted: false,
             sorting: false,
             animationSpeed: 350,
-            hideText: false
+            hideText: false,
+            navExpanded: false
         };
 
         // Used to track when the user enters a different size
@@ -43,7 +44,7 @@ class Visualizer extends Component {
     }
 
     resize() {
-        this.setState({ hideText: window.innerWidth <= 900});
+        this.setState({ hideText: window.innerWidth <= 900 });
     }
 
     render() {
@@ -60,7 +61,7 @@ class Visualizer extends Component {
 
         return (
             <React.Fragment>
-                <Navbar expand="xl" bg="dark" variant="dark">
+                <Navbar onToggle={() => this.navToggle()} expanded={this.state.navExpanded} expand="xl" bg="dark" variant="dark">
                     <Navbar.Brand>Sort Visualizer</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
@@ -84,21 +85,25 @@ class Visualizer extends Component {
                     </Navbar.Collapse>
                 </Navbar>
                 {
-                mapIterator(bars, (value, key) => {
-                    return <div key={key} id={key} className="bar" style={{
-                        width: `calc(${100 / (bars.size)}% - ${subtractWidth}px)`,
-                        // height: `calc(${value[0]}% - ${this.nav.clientHeight}px`,
-                        height: `calc(${value[0]}vh - 56px)`,
-                        left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${value[1]} + ${value[1] + 1} * 10px)`,
-                        transition: `${this.state.animationSpeed / 1000}s`
-                    }} >
-                        {/* Text inside the bar showing the height for the user to see */}
-                        <span hidden={this.state.hideText} className="value">{value[0]}</span>
-                    </div>;
-                })}
+                    mapIterator(bars, (value, key) => {
+                        return <div key={key} id={key} className="bar" style={{
+                            width: `calc(${100 / (bars.size)}% - ${subtractWidth}px)`,
+                            // height: `calc(${value[0]}% - ${this.nav.clientHeight}px`,
+                            height: `calc(${value[0]}vh - 56px)`,
+                            left: `calc((${100 / (bars.size)}% - ${subtractWidth}px) * ${value[1]} + ${value[1] + 1} * 10px)`,
+                            transition: `${this.state.animationSpeed / 1000}s`
+                        }} >
+                            {/* Text inside the bar showing the height for the user to see */}
+                            <span hidden={this.state.hideText} className="value">{value[0]}</span>
+                        </div>;
+                    })}
             </React.Fragment>
         );
 
+    }
+
+    navToggle() {
+        this.setState({ navExpanded: !this.state.navExpanded });
     }
 
     /**
@@ -124,10 +129,13 @@ class Visualizer extends Component {
     }
 
     sort(algorithm) {
-        let nums = this.getArray();
         if (this.state.sorted || this.state.sorting) {
             return;
         }
+        let nums = this.getArray();
+
+        this.navToggle();
+        
         this.setState({ sorted: true, sorting: true });
 
         this.animate(algorithm(nums));
@@ -136,7 +144,7 @@ class Visualizer extends Component {
     animate(animationArray) {
         // const delay = this.state.animationSpeed
         if (animationArray.length == 0) {
-            this.setState({ sorting: false })
+            this.setState({ sorting: false });
         } else {
             setTimeout(() => {
                 this.swapDivPositions(animationArray[0][0], animationArray[0][1]);
