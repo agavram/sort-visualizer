@@ -102,6 +102,9 @@ class Visualizer extends Component {
 
     }
 
+    /**
+     * Used to toggle the navbar when it is collapsed into a dropdown
+     */
     navToggle() {
         this.setState({ navExpanded: !this.state.navExpanded });
     }
@@ -129,13 +132,16 @@ class Visualizer extends Component {
     }
 
     sort(algorithm) {
+        if (window.innerWidth < 1200) {
+            this.navToggle();
+        }
+
         if (this.state.sorted || this.state.sorting) {
             return;
         }
+
         let nums = this.getArray();
 
-        this.navToggle();
-        
         this.setState({ sorted: true, sorting: true });
 
         this.animate(algorithm(nums));
@@ -143,8 +149,11 @@ class Visualizer extends Component {
 
     animate(animationArray) {
         // const delay = this.state.animationSpeed
-        if (animationArray.length == 0) {
+        if (animationArray.length === 0) {
             this.setState({ sorting: false });
+        } else if (animationArray[0][0] === animationArray[0][1]) {
+            animationArray.shift();
+            this.animate(animationArray);
         } else {
             setTimeout(() => {
                 this.swapDivPositions(animationArray[0][0], animationArray[0][1]);
